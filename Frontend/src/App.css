@@ -1,0 +1,34 @@
+.app-loader {
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: #0a335e;
+    font-weight: 700;
+}
+
+.dark .app-loader {
+    color: var(--text-primary);
+}
+
+.app-loader__spinner {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 4px solid #d7e7f6;
+    border-top-color: #1f75b8;
+    animation: appLoaderSpin 0.8s linear infinite;
+}
+
+.dark .app-loader__spinner {
+    border-color: rgba(255, 255, 255, 0.18);
+    border-top-color: var(--accent-color);
+}
+
+@keyframes appLoaderSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}

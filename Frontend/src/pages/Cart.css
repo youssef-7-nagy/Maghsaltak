@@ -1,0 +1,436 @@
+.cart-container {
+    padding: clamp(2rem, 4vw, 4rem) 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    min-height: 80vh;
+}
+
+.cart-title {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    color: #0e223c;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.cart-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+/* Empty & Success states */
+.cart-container.empty-view,
+.cart-container.success-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.cart-container.empty-view h2 {
+    color: #0e223c;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.cart-container.empty-view p {
+    color: #546b83;
+    margin-bottom: 2rem;
+}
+
+.success-card {
+    background: #fff;
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    max-width: 500px;
+    width: 100%;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #10b981;
+    color: #fff;
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+}
+
+.success-card h2 {
+    color: #0e223c;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.success-card p {
+    color: #546b83;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+/* Summary Card */
+.cart-summary {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.cart-summary h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #0e223c;
+    font-size: 1.4rem;
+    border-bottom: 1px solid #edf4ff;
+    padding-bottom: 1rem;
+}
+
+.cart-item-card {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.cart-item-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.cart-item-details h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    color: #0e223c;
+}
+
+.cart-item-details p {
+    margin: 0 0 0.5rem 0;
+    color: #546b83;
+    font-size: 0.9rem;
+}
+
+.cart-item-price {
+    font-weight: 700;
+    color: #2168e4;
+    font-size: 1.1rem;
+}
+
+.cart-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 2px dashed #edf4ff;
+    padding-top: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.cart-total-row strong {
+    color: #2168e4;
+    font-size: 1.5rem;
+}
+
+/* Form Styles */
+.cart-checkout-form {
+    background: #f8fbff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid #d5e2f0;
+}
+
+.cart-checkout-form h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #0e223c;
+    font-size: 1.4rem;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #0e223c;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #d5e2f0;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: #2168e4;
+    box-shadow: 0 0 0 3px rgba(33, 104, 228, 0.1);
+}
+
+.payment-method {
+    margin-bottom: 2rem;
+}
+
+.payment-method label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #0e223c;
+}
+
+.payment-box {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #d5e2f0;
+    border-radius: 8px;
+}
+
+.payment-box input[type="radio"] {
+    accent-color: #2168e4;
+    width: 18px;
+    height: 18px;
+}
+
+.checkout-btn {
+    width: 100%;
+    margin-top: 1rem;
+    text-align: center;
+    display: block;
+}
+
+.dark .cart-title,
+.dark .cart-container.empty-view h2,
+.dark .success-card h2,
+.dark .cart-summary h3,
+.dark .cart-item-details h4,
+.dark .cart-checkout-form h3,
+.dark .input-group label,
+.dark .payment-method label {
+    color: var(--text-primary);
+}
+
+.dark .cart-container.empty-view p,
+.dark .success-card p,
+.dark .cart-item-details p {
+    color: var(--text-secondary);
+}
+
+.dark .success-card,
+.dark .cart-summary {
+    background: rgba(12, 30, 50, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.dark .cart-summary h3 {
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark .cart-total-row {
+    border-top-color: rgba(255, 255, 255, 0.16);
+    color: var(--text-primary);
+}
+
+.dark .cart-checkout-form {
+    background: rgba(8, 29, 53, 0.75);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark .input-group input,
+.dark .input-group textarea {
+    background: rgba(4, 16, 29, 0.8);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+.dark .input-group input::placeholder,
+.dark .input-group textarea::placeholder {
+    color: rgba(200, 218, 236, 0.75);
+}
+
+.dark .input-group input:focus,
+.dark .input-group textarea:focus {
+    box-shadow: 0 0 0 3px rgba(64, 196, 255, 0.2);
+    border-color: var(--accent-color);
+}
+
+.dark .payment-box {
+    background: rgba(4, 16, 29, 0.75);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-primary);
+}
+
+@media (max-width: 850px) {
+    .cart-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+/* ── Car Picker ──────────────────────────────────────────── */
+.car-picker-loading {
+    padding: 1rem;
+    color: #546b83;
+    font-size: 0.9rem;
+    text-align: center;
+    background: #f0f6ff;
+    border-radius: 8px;
+}
+
+.car-picker-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    background: #f8fbff;
+    border: 1px dashed #b8d4f5;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.car-picker-empty span {
+    font-size: 2rem;
+}
+
+.car-picker-empty p {
+    color: #546b83;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.car-picker-add-btn {
+    margin-top: 0.5rem;
+    padding: 0.5rem 1.2rem;
+    background: #2168e4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.car-picker-add-btn:hover {
+    background: #1a56c8;
+}
+
+.car-picker-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.car-pick-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    border: 2px solid #d5e2f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    background: #fff;
+}
+
+.car-pick-card:hover {
+    border-color: #2168e4;
+    background: #f0f6ff;
+}
+
+.car-pick-card.selected {
+    border-color: #2168e4;
+    background: #eef4ff;
+    box-shadow: 0 0 0 3px rgba(33, 104, 228, 0.12);
+}
+
+.car-pick-logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.car-pick-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.car-pick-info strong {
+    font-size: 0.95rem;
+    color: #0e223c;
+}
+
+.car-pick-info span {
+    font-size: 0.8rem;
+    color: #546b83;
+}
+
+.car-pick-check {
+    width: 24px;
+    height: 24px;
+    background: #2168e4;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* Dark mode car picker */
+.dark .car-pick-card {
+    background: rgba(4, 16, 29, 0.6);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark .car-pick-card:hover {
+    border-color: var(--accent-color);
+    background: rgba(33, 104, 228, 0.1);
+}
+
+.dark .car-pick-card.selected {
+    border-color: var(--accent-color);
+    background: rgba(33, 104, 228, 0.15);
+}
+
+.dark .car-pick-info strong {
+    color: var(--text-primary);
+}
+
+.dark .car-pick-info span {
+    color: var(--text-secondary);
+}
+
+.dark .car-picker-empty {
+    background: rgba(4, 16, 29, 0.6);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.dark .car-picker-loading {
+    background: rgba(4, 16, 29, 0.4);
+    color: var(--text-secondary);
+}
+

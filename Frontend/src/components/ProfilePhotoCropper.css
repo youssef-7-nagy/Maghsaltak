@@ -1,0 +1,262 @@
+/* =====================================================================
+   PROFILE PHOTO CROPPER — WhatsApp-style image crop modal
+   ===================================================================== */
+
+.cropper-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: cropperFadeIn 0.25s ease;
+}
+
+.cropper-modal {
+    background: #1a1a2e;
+    border-radius: 24px;
+    padding: 0;
+    max-width: 480px;
+    width: 92%;
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 0 60px rgba(67, 97, 238, 0.15);
+    animation: cropperSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+/* --- Header --- */
+.cropper-header {
+    padding: 24px 28px 16px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cropper-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+    font-family: 'Poppins', 'Inter', sans-serif;
+}
+
+.cropper-header p {
+    margin: 6px 0 0;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 400;
+}
+
+/* --- Canvas Area --- */
+.cropper-canvas-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0d0d1a;
+    min-height: 300px;
+}
+
+.cropper-canvas {
+    display: block;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    width: 100%;
+    height: auto;
+}
+
+.cropper-canvas:active {
+    cursor: grabbing;
+}
+
+.cropper-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+}
+
+.cropper-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #4361ee;
+    border-radius: 50%;
+    animation: cropperSpin 0.8s linear infinite;
+}
+
+/* --- Zoom Control --- */
+.cropper-zoom-control {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 28px;
+    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.cropper-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+}
+
+.cropper-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(67, 97, 238, 0.4);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cropper-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 14px rgba(67, 97, 238, 0.6);
+}
+
+.cropper-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 8px rgba(67, 97, 238, 0.4);
+}
+
+/* --- Action Buttons --- */
+.cropper-actions {
+    display: flex;
+    gap: 12px;
+    padding: 20px 28px 24px;
+    justify-content: flex-end;
+}
+
+.cropper-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    border: none;
+    font-family: 'Poppins', 'Inter', sans-serif;
+}
+
+.cropper-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cropper-btn-cancel {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cropper-btn-cancel:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.cropper-btn-confirm {
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.35);
+}
+
+.cropper-btn-confirm:hover:not(:disabled) {
+    box-shadow: 0 8px 25px rgba(67, 97, 238, 0.5);
+    transform: translateY(-2px);
+}
+
+.cropper-btn-confirm:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(67, 97, 238, 0.3);
+}
+
+.cropper-btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: cropperSpin 0.7s linear infinite;
+}
+
+/* --- Animations --- */
+@keyframes cropperFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes cropperSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes cropperSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* --- Responsive --- */
+@media (max-width: 500px) {
+    .cropper-modal {
+        width: 96%;
+        border-radius: 20px;
+    }
+
+    .cropper-header {
+        padding: 18px 20px 12px;
+    }
+
+    .cropper-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .cropper-zoom-control {
+        padding: 12px 20px;
+    }
+
+    .cropper-actions {
+        padding: 16px 20px 20px;
+        flex-direction: column;
+    }
+
+    .cropper-btn {
+        justify-content: center;
+        padding: 14px 20px;
+    }
+}

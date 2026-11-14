@@ -1,0 +1,317 @@
+/* ── Assign Worker Modal ───────────────────────────────────────────────────── */
+.assign-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.assign-modal {
+  background: linear-gradient(145deg, #1a1a2e, #16213e, #0f3460);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  width: 100%;
+  max-width: 520px;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.assign-modal__header {
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.assign-modal__header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.assign-modal__header-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+.assign-modal__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.assign-modal__subtitle {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 2px 0 0;
+}
+
+.assign-modal__close {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.assign-modal__close:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+.assign-modal__body {
+  padding: 24px 28px;
+}
+
+/* ── Booking Summary ─────────────────────────────────────────────────────────── */
+.assign-booking-summary {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.assign-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.assign-summary-item__label {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.assign-summary-item__value {
+  font-size: 0.875rem;
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+/* ── SP List ─────────────────────────────────────────────────────────────────── */
+.assign-section-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+.assign-sp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+  margin-bottom: 24px;
+}
+
+.assign-sp-list::-webkit-scrollbar { width: 4px; }
+.assign-sp-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+
+.assign-sp-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.assign-sp-item:hover {
+  border-color: rgba(102, 126, 234, 0.4);
+  background: rgba(102, 126, 234, 0.06);
+}
+
+.assign-sp-item--selected {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.12);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.25);
+}
+
+.assign-sp-item__avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.assign-sp-item__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.assign-sp-item__info {
+  flex: 1;
+}
+
+.assign-sp-item__name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.assign-sp-item__meta {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 2px;
+}
+
+.assign-sp-item__available {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.assign-sp-item__available--yes { color: #34d399; }
+.assign-sp-item__available--no { color: rgba(255,255,255,0.3); }
+
+.assign-sp-item__check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.assign-sp-item--selected .assign-sp-item__check {
+  background: #667eea;
+  border-color: #667eea;
+  color: #fff;
+  font-size: 0.75rem;
+}
+
+/* ── Loading / Empty ─────────────────────────────────────────────────────────── */
+.assign-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  gap: 12px;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.875rem;
+}
+
+.assign-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.assign-empty {
+  text-align: center;
+  padding: 30px;
+  color: rgba(255,255,255,0.3);
+  font-size: 0.875rem;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────────── */
+.assign-modal__footer {
+  display: flex;
+  gap: 12px;
+  padding: 0 28px 28px;
+}
+
+.assign-btn {
+  flex: 1;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.assign-btn--cancel {
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.assign-btn--cancel:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+
+.assign-btn--confirm {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(102,126,234,0.4);
+}
+
+.assign-btn--confirm:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102,126,234,0.5);
+}
+
+.assign-btn--confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}

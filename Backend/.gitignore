@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel
+
+# User Uploads
+uploads/**
+!uploads/**/
+!uploads/**/.gitkeep
+
+# Operating System & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

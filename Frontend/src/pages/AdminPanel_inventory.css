@@ -1,0 +1,33 @@
+
+/* --- INVENTORY STYLES --- */
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.digital-id-card.error-theme {
+    background: linear-gradient(135deg, #fff5f5 0%, #fee2e2 100%);
+    border-color: #fca5a5;
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.15);
+}
+.digital-id-card.error-theme .card-logo {
+    color: #b91c1c;
+}
+.digital-id-card.error-theme .card-stat span {
+    color: #991b1b;
+}
+.digital-id-card.error-theme h4 {
+    color: #7f1d1d;
+}
+
+.dark .digital-id-card.error-theme {
+    background: linear-gradient(135deg, rgba(153, 27, 27, 0.4) 0%, rgba(127, 29, 29, 0.8) 100%);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+.dark .digital-id-card.error-theme h4,
+.dark .digital-id-card.error-theme .card-logo,
+.dark .digital-id-card.error-theme .card-stat span {
+    color: #fecaca;
+}
