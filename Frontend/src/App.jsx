@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from './config/api';
 import './App.css';
 import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/Navbar';
@@ -123,7 +124,7 @@ const App = () => {
             setIsCheckingSession(true);
 
             try {
-                const response = await axios.get('http://localhost:8080/auth/me', {
+                const response = await axios.get(`${API_BASE_URL}/auth/me`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

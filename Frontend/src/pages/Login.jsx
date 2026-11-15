@@ -284,10 +284,15 @@ const Login = () => {
 
     const handleGoogleAuth = (e, mode = "signin") => {
         e.preventDefault();
-        if (mode === "signup") {
-            triggerGoogleSignUp();
-        } else {
-            triggerGoogleSignIn();
+        try {
+            if (mode === "signup") {
+                triggerGoogleSignUp();
+            } else {
+                triggerGoogleSignIn();
+            }
+        } catch (err) {
+            console.error("Google trigger error:", err);
+            notify.error("Google login service is loading. Please try again.");
         }
     };
 
