@@ -17,18 +17,16 @@ const httpServer = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 const rawClientUrl = process.env.CLIENT_URL || "http://localhost:5173";
 const CLIENT_URL = rawClientUrl.replace(/\/+$/, "");
-const allowedOrigins = [
-  CLIENT_URL,
-  `${CLIENT_URL}/`,
-  "http://localhost:5173",
-  "http://localhost:5174",
-];
+const corsOriginHandler = (origin, callback) => {
+  // Allow all origins (including all *.vercel.app preview and production domains)
+  callback(null, true);
+};
 
 // ── Socket.io Setup ──────────────────────────────────────────────────────────
 const io = new Server(httpServer, {
   cors: {
-    origin: allowedOrigins,
-    methods: ["GET", "POST"],
+    origin: corsOriginHandler,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
   },
 });
@@ -160,10 +158,13 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: corsOriginHandler,
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
+app.options("*", cors());
 
 // ── Health Check / Root ──────────────────────────────────────────────────────
 app.get("/", (req, res) => {
