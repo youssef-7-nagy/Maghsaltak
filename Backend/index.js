@@ -9,6 +9,7 @@ const fs = require("fs");
 
 const { databaseConnection } = require("./db/db.config");
 
+dotenv.config({ path: path.join(__dirname, ".env") });
 dotenv.config();
 
 const app = express();
@@ -164,7 +165,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
-app.options("*", cors());
 
 // ── Health Check / Root ──────────────────────────────────────────────────────
 app.get("/", (req, res) => {
