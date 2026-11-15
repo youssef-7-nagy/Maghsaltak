@@ -11,13 +11,18 @@ try {
 
 dotenv.config();
 
+let isConnected = false;
+
 async function databaseConnection() {
+  if (isConnected || mongoose.connection.readyState === 1) {
+    return;
+  }
   try {
-    await mongoose.connect(process.env.DB_URL);
-    console.log("MongoDB Conntected!");
+    const db = await mongoose.connect(process.env.DB_URL);
+    isConnected = db.connections[0].readyState === 1;
+    console.log("MongoDB Connected!");
   } catch (error) {
-    console.log(error);
-    process.exit(1);
+    console.error("MongoDB connection error:", error.message);
   }
 }
 

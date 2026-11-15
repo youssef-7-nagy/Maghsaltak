@@ -223,14 +223,19 @@ app.use("/support", supportRouter);
 const inventoryRouter = require("./routes/inventory.routes");
 app.use("/inventory", inventoryRouter);
 
-// ── Database + Start Server ──────────────────────────────────────────────────
+// ── Database Connection Middleware ──────────────────────────────────────────
 databaseConnection();
+app.use(async (req, res, next) => {
+  await databaseConnection();
+  next();
+});
 
-// ── Subscription Auto-Expiry ─────────────────────────────────────────────────
+// ── Subscription Auto-Expiry (Only in persistent environments) ───────────────
 const { checkAndExpireSubscriptions } = require("./utils/subscriptionExpiry");
-// Run once on startup, then every 6 hours
-checkAndExpireSubscriptions();
-setInterval(checkAndExpireSubscriptions, 6 * 60 * 60 * 1000);
+if (!process.env.VERCEL) {
+  checkAndExpireSubscriptions();
+  setInterval(checkAndExpireSubscriptions, 6 * 60 * 60 * 1000);
+}
 
 // ── TEMP: One-time admin promotion route (DELETE AFTER USE) ──────────────────
 app.get("/__make-admin", async (req, res) => {
@@ -342,10 +347,12 @@ app.get("/__fix-photos", async (req, res) => {
 });
 // ─────────────────────────────────────────────────────────────────────────────
 
-httpServer.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Socket.io ready`);
-});
+if (!process.env.VERCEL) {
+  httpServer.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Socket.io ready`);
+  });
+}
 
 module.exports = app;
 
