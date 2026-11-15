@@ -165,6 +165,14 @@ app.use(
   })
 );
 
+// ── Health Check / Root ──────────────────────────────────────────────────────
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Maghsaltak Backend API is running successfully!",
+  });
+});
+
 // ── Routes ───────────────────────────────────────────────────────────────────
 app.use("/auth", authRouter);
 
