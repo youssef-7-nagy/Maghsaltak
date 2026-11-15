@@ -7,7 +7,7 @@ import './Home.css';
 import AdditionalServices from '../components/AdditionalServices';
 
 // IMPORT YOUR PHOTOS HERE
-import beforeImg from '../assets/unclean.jpg';
+import beforeImg from '../assets/Unclean.jpg';
 import afterImg from '../assets/clean.jpg';
 import carfarImg from '../assets/Carfar.PNG';
 import section5Img from '../assets/section5.png';
