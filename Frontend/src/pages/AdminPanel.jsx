@@ -10,6 +10,7 @@ import AssignWorkerModal from '../components/AssignWorkerModal';
 import InventoryPanel from '../components/InventoryPanel';
 import PackageCard from '../components/PackageCard';
 import { useSocket } from '../hooks/useSocket';
+import { API_BASE_URL } from '../config/api';
 
 const ORDER_STATUS_WEIGHT = { pending: 0, delivered: 1, completed: 2, cancelled: 3 };
 const MAX_UPLOAD_IMAGES = 5;
@@ -186,11 +187,11 @@ const AdminPanel = () => {
     try {
       if (tabName === "overview") {
         const [usersRes, bookingsRes, ordersRes, productsRes, carsRes] = await Promise.all([
-          axios.get("http://localhost:8080/auth/users", config).catch(() => ({ data: { data: [] }})),
-          axios.get("http://localhost:8080/reservation/admin/all", config).catch(() => ({ data: { data: [] }})),
-          axios.get("http://localhost:8080/order/admin/all", config).catch(() => ({ data: { data: [] }})),
-          axios.get("http://localhost:8080/packages").catch(() => ({ data: { data: [] }})),
-          axios.get("http://localhost:8080/cars/admin/all", config).catch(() => ({ data: { data: { cars: [] } }})),
+          axios.get(`${API_BASE_URL}/auth/users`, config).catch(() => ({ data: { data: [] }})),
+          axios.get(`${API_BASE_URL}/reservation/admin/all`, config).catch(() => ({ data: { data: [] }})),
+          axios.get(`${API_BASE_URL}/order/admin/all`, config).catch(() => ({ data: { data: [] }})),
+          axios.get(`${API_BASE_URL}/packages`).catch(() => ({ data: { data: [] }})),
+          axios.get(`${API_BASE_URL}/cars/admin/all`, config).catch(() => ({ data: { data: { cars: [] } }})),
         ]);
         setUsers(usersRes.data.data || []);
         setBookings(bookingsRes.data.data || []);
@@ -198,25 +199,25 @@ const AdminPanel = () => {
         setPackages(productsRes.data.data || []);
         setCars(carsRes.data.data?.cars || []);
       } else if (tabName === "users") {
-        const usersRes = await axios.get("http://localhost:8080/auth/users", config);
+        const usersRes = await axios.get(`${API_BASE_URL}/auth/users`, config);
         setUsers(usersRes.data.data || []);
       } else if (tabName === "business") {
-        const analyticsRes = await axios.get("http://localhost:8080/reservation/admin/analytics", config);
+        const analyticsRes = await axios.get(`${API_BASE_URL}/reservation/admin/analytics`, config);
         setAnalytics(analyticsRes.data.data);
       } else if (tabName === "bookings") {
-        const bookingsRes = await axios.get("http://localhost:8080/reservation/admin/all", config);
+        const bookingsRes = await axios.get(`${API_BASE_URL}/reservation/admin/all`, config);
         setBookings(bookingsRes.data.data || []);
       } else if (tabName === "orders") {
-        const ordersRes = await axios.get("http://localhost:8080/order/admin/all", config);
+        const ordersRes = await axios.get(`${API_BASE_URL}/order/admin/all`, config);
         setOrders(ordersRes.data.data || []);
       } else if (tabName === "subscriptions") {
-        const subsRes = await axios.get("http://localhost:8080/order/admin/subscriptions", config);
+        const subsRes = await axios.get(`${API_BASE_URL}/order/admin/subscriptions`, config);
         setSubscriptions(subsRes.data.data || []);
       } else if (tabName === "packages") {
-        const productsRes = await axios.get("http://localhost:8080/packages");
+        const productsRes = await axios.get(`${API_BASE_URL}/packages`);
         setPackages(productsRes.data.data || []);
       } else if (tabName === "cars") {
-        const carsRes = await axios.get("http://localhost:8080/cars/admin/all", config);
+        const carsRes = await axios.get(`${API_BASE_URL}/cars/admin/all`, config);
         setCars(carsRes.data.data?.cars || []);
       }
     } catch (error) {
@@ -445,7 +446,7 @@ const AdminPanel = () => {
   const handleUserRoleChange = async (id, role) => {
     if (userData._id === id && !window.confirm("Change your own role?")) return;
     try {
-      await axios.put(`http://localhost:8080/auth/users/${id}/role`, { role }, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.put(`${API_BASE_URL}/auth/users/${id}/role`, { role }, { headers: { Authorization: `Bearer ${token}` } });
       setUsers((prev) => prev.map((user) => (user._id === id ? { ...user, role } : user)));
       notify.success(`Success - Role changed to ${role}.`);
     } catch {
@@ -458,7 +459,7 @@ const AdminPanel = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       if (editingId) {
-        await axios.put(`http://localhost:8080/packages/${editingId}`, formData, config);
+        await axios.put(`${API_BASE_URL}/packages/${editingId}`, formData, config);
         notify.success("Success - Package updated.");
       } else {
         const data = new FormData();
@@ -468,7 +469,7 @@ const AdminPanel = () => {
         } else {
           return notify.error("Error - At least one image is required.");
         }
-        await axios.post("http://localhost:8080/packages", data, {
+        await axios.post(`${API_BASE_URL}/packages`, data, {
           headers: { ...config.headers, "Content-Type": "multipart/form-data" },
         });
         notify.success("Success - Package created.");
@@ -499,7 +500,7 @@ const AdminPanel = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this package?")) return;
     try {
-      await axios.delete(`http://localhost:8080/packages/${id}`, {
+      await axios.delete(`${API_BASE_URL}/packages/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPackages((prev) => prev.filter((pkg) => pkg._id !== id));
@@ -526,7 +527,7 @@ const AdminPanel = () => {
     try {
       const payload = reordered.map((product) => ({ id: product._id, order: product.order }));
       await axios.put(
-        "http://localhost:8080/packages/reorder",
+        `${API_BASE_URL}/packages/reorder`,
         { items: payload },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -541,7 +542,7 @@ const AdminPanel = () => {
     try {
       setStatusBusyId(orderId);
       await axios.put(
-        `http://localhost:8080/order/${orderId}/status`,
+        `${API_BASE_URL}/order/${orderId}/status`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -557,7 +558,7 @@ const AdminPanel = () => {
   const updateReservationStatus = async (reservationId, status) => {
     try {
       await axios.put(
-        `http://localhost:8080/reservation/${reservationId}/status`,
+        `${API_BASE_URL}/reservation/${reservationId}/status`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -1619,7 +1620,7 @@ const AdminPanel = () => {
             setSubStatusBusyId(id);
             try {
               const res = await axios.put(
-                `http://localhost:8080/order/${id}/subscription-status`,
+                `${API_BASE_URL}/order/${id}/subscription-status`,
                 { subscriptionStatus: 'active' },
                 { headers: { Authorization: `Bearer ${token}` } }
               );
@@ -1643,7 +1644,7 @@ const AdminPanel = () => {
             setWashModal({ isOpen: false, subId: '' });
             try {
               const res = await axios.put(
-                `http://localhost:8080/order/${subId}/add-wash`,
+                `${API_BASE_URL}/order/${subId}/add-wash`,
                 { date: washDate },
                 { headers: { Authorization: `Bearer ${token}` } }
               );
@@ -1661,7 +1662,7 @@ const AdminPanel = () => {
             setSubStatusBusyId(id);
             try {
               const res = await axios.put(
-                `http://localhost:8080/order/${id}/subscription-status`,
+                `${API_BASE_URL}/order/${id}/subscription-status`,
                 { subscriptionStatus: 'cancelled' },
                 { headers: { Authorization: `Bearer ${token}` } }
               );
@@ -2191,7 +2192,7 @@ const AdminPanel = () => {
                                           title={p.title}
                                           price={p.price}
                                           duration={`${p.stock || '1 Month'} (4 Washes)`}
-                                          image={p.images && p.images.length > 0 ? `http://localhost:8080/${p.images[0]}` : null}
+                                          image={p.images && p.images.length > 0 ? `${API_BASE_URL}/${p.images[0]}` : null}
                                           features={features}
                                           isPopular={Number(p.price) >= 500 && Number(p.price) < 1000}
                                           isSelected={false}

@@ -5,8 +5,9 @@ import toast from 'react-hot-toast';
 import './TrackingPage.css';
 import { useBookingTracking } from '../hooks/useBookingTracking';
 import ChatBox from '../components/ChatBox';
+import { API_BASE_URL } from '../config/api';
 
-const API = 'http://localhost:8080';
+const API = API_BASE_URL;
 
 function getAuthHeader() {
   return { Authorization: `Bearer ${localStorage.getItem('token')}` };

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { notify } from '../utils/notify';
 import { FiEdit2, FiTrash2, FiPlus, FiAlertCircle, FiCheckCircle } from 'react-icons/fi';
 import '../pages/AdminPanel.css';
+import { API_BASE_URL } from '../config/api';
 
 const InventoryPanel = () => {
   const [inventory, setInventory] = useState([]);
@@ -25,7 +26,7 @@ const InventoryPanel = () => {
   const fetchInventory = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:8080/inventory', config);
+      const res = await axios.get(`${API_BASE_URL}/inventory`, config);
       setInventory(res.data.data || []);
       setError('');
     } catch (err) {
@@ -48,10 +49,10 @@ const InventoryPanel = () => {
     e.preventDefault();
     try {
       if (editingItem) {
-        await axios.put(`http://localhost:8080/inventory/${editingItem._id}`, formData, config);
+        await axios.put(`${API_BASE_URL}/inventory/${editingItem._id}`, formData, config);
         notify.success('Item updated successfully');
       } else {
-        await axios.post('http://localhost:8080/inventory', formData, config);
+        await axios.post(`${API_BASE_URL}/inventory`, formData, config);
         notify.success('Item added successfully');
       }
       setShowForm(false);
@@ -77,7 +78,7 @@ const InventoryPanel = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     try {
-      await axios.delete(`http://localhost:8080/inventory/${id}`, config);
+      await axios.delete(`${API_BASE_URL}/inventory/${id}`, config);
       notify.success('Item deleted successfully');
       fetchInventory();
     } catch (err) {

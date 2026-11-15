@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Sparkles, ShieldCheck, Clock3, MapPin, Phone, Mail, Rocket, Star, HeartHandshake, CalendarCheck2, CarFront, BadgeCheck, ChevronLeft, ChevronRight, Droplets, Leaf, Percent } from 'lucide-react';
 import './AboutUs.css';
+import { API_BASE_URL } from '../config/api';
 
 const AboutUs = () => {
     const [reviews, setReviews] = useState([]);
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
 
     useEffect(() => {
-        axios.get('http://localhost:8080/reservation/public/reviews')
+        axios.get(`${API_BASE_URL}/reservation/public/reviews`)
             .then(res => {
                 if (res.data?.data && res.data.data.length > 0) {
                     setReviews(res.data.data);
@@ -466,7 +467,7 @@ const AboutUs = () => {
                                     </div>
                                     <p className="review-comment">"{review.reviewText || review.comment}"</p>
                                     <div className="review-author">
-                                        <img src={(() => { const p = review.user?.profilePhoto; if (p) { if (p.startsWith('http')) return p; if (p.startsWith('data:')) return review.avatar || `https://i.pravatar.cc/150?img=${idx + 10}`; return `http://localhost:8080${p}`; } return review.avatar || `https://i.pravatar.cc/150?img=${idx + 10}`; })()} alt={review.userName || review.name} className="review-avatar" onError={(e) => { e.target.src = `https://i.pravatar.cc/150?img=${idx + 10}`; }} />
+                                        <img src={(() => { const p = review.user?.profilePhoto; if (p) { if (p.startsWith('http')) return p; if (p.startsWith('data:')) return review.avatar || `https://i.pravatar.cc/150?img=${idx + 10}`; return `${API_BASE_URL}${p}`; } return review.avatar || `https://i.pravatar.cc/150?img=${idx + 10}`; })()} alt={review.userName || review.name} className="review-avatar" onError={(e) => { e.target.src = `https://i.pravatar.cc/150?img=${idx + 10}`; }} />
                                         <div className="review-author-info">
                                             <h4>{review.userName || review.name}</h4>
                                             <span>{review.role || "Verified Client"}</span>

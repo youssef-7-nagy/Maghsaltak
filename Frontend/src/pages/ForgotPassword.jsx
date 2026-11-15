@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 import "./Login.css";
 import "./ForgotPassword.css";
+import { API_BASE_URL } from "../config/api";
 
 const ForgotPassword = () => {
   const emailRef = useRef(null);
@@ -24,7 +25,7 @@ const ForgotPassword = () => {
     setFeedback({ type: "", message: "" });
 
     try {
-      const response = await axios.post("http://localhost:8080/auth/forgot-password", {
+      const response = await axios.post(`${API_BASE_URL}/auth/forgot-password`, {
         email,
       });
 

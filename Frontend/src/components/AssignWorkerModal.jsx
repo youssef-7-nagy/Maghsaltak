@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import './AssignWorkerModal.css';
+import { API_BASE_URL } from '../config/api';
 
-const API = 'http://localhost:8080';
+const API = API_BASE_URL;
 
 function getAuthHeader() {
   return { Authorization: `Bearer ${localStorage.getItem('token')}` };

@@ -10,9 +10,7 @@ import ProfilePhotoCropper from '../components/ProfilePhotoCropper';
 import { getBrandLogoUrl } from '../utils/logoHelper';
 import './profile.css';
 import './AdminPanel.css';
-
-
-const API_BASE_URL = 'http://localhost:8080';
+import { API_BASE_URL } from '../config/api';
 
 
 

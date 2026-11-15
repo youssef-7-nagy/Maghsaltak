@@ -23,8 +23,9 @@ import carwashImg from '../assets/carwash.jpg';
 import cleannnImg from '../assets/cleannn.png';
 import makhsaltakImg from '../assets/Makhsaltak.jpg';
 import cartoImg from '../assets/carto.jpg';
+import { API_BASE_URL } from '../config/api';
 
-const API = 'http://localhost:8080';
+const API = API_BASE_URL;
 
 /* ── Seeded random for stable particle positions ── */
 const seededRand = (seed) => {

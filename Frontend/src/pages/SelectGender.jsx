@@ -2,8 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./SelectGender.css";
-
-const API_BASE_URL = "http://localhost:8080";
+import { API_BASE_URL } from "../config/api";
 
 const parseStoredUser = () => {
     try {

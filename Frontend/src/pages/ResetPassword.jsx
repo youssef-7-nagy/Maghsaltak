@@ -4,8 +4,9 @@ import { FaLock, FaEye, FaEyeSlash, FaArrowLeft, FaCheckCircle, FaTimesCircle } 
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import './Login.css';
 import './ResetPassword.css';
+import { API_BASE_URL } from '../config/api';
 
-const API_BASE = 'http://localhost:8080';
+const API_BASE = API_BASE_URL;
 
 const PasswordStrengthBar = ({ password }) => {
     const getStrength = () => {

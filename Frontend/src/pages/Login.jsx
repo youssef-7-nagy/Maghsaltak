@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { notify } from "../utils/notify";
 import { useGoogleLogin } from "@react-oauth/google";
+import { API_BASE_URL } from "../config/api";
 import "./Login.css";
 
 import {
@@ -111,7 +112,7 @@ const Login = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:8080/auth/register", {
+            const response = await axios.post(`${API_BASE_URL}/auth/register`, {
                 name: regForm.name.trim(),
                 phone: regForm.phone,
                 email: regForm.email.trim().toLowerCase(),
@@ -159,7 +160,7 @@ const Login = () => {
         const password = loginPasswordRef.current.value;
 
         try {
-            const response = await axios.post("http://localhost:8080/auth/login", {
+            const response = await axios.post(`${API_BASE_URL}/auth/login`, {
                 email,
                 password
             });
@@ -202,7 +203,7 @@ const Login = () => {
                 });
                 const googleProfile = userInfoRes.data;
 
-                const response = await axios.post("http://localhost:8080/auth/google", {
+                const response = await axios.post(`${API_BASE_URL}/auth/google`, {
                     email: googleProfile.email,
                     name: googleProfile.name,
                 });
@@ -246,7 +247,7 @@ const Login = () => {
                 });
                 const googleProfile = userInfoRes.data;
 
-                const response = await axios.post("http://localhost:8080/auth/google", {
+                const response = await axios.post(`${API_BASE_URL}/auth/google`, {
                     email: googleProfile.email,
                     name: googleProfile.name,
                 });

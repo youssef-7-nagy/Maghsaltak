@@ -5,8 +5,9 @@ import './ServiceProviderDashboard.css';
 import { useServiceProviderSocket } from '../hooks/useBookingTracking';
 import ChatBox from '../components/ChatBox';
 import washerImg from '../assets/washer.png';
+import { API_BASE_URL } from '../config/api';
 
-const API = 'http://localhost:8080';
+const API = API_BASE_URL;
 
 const STATUS_FLOW = [
   { key: 'accepted', label: 'Accepted', icon: '✓', next: 'on_the_way' },

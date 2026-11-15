@@ -5,6 +5,7 @@ import { CarFront } from 'lucide-react';
 import { getBrandLogoUrl } from '../utils/logoHelper';
 import PackageCard from '../components/PackageCard';
 import { notify } from '../utils/notify';
+import { API_BASE_URL } from '../config/api';
 import './Packages.css';
 
 const Packages = () => {
@@ -23,7 +24,7 @@ const Packages = () => {
     useEffect(() => {
         const fetchPackages = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/packages');
+                const response = await axios.get(`${API_BASE_URL}/packages`);
                 if (response.data.status === 'success') {
                     setPackages(response.data.data);
                 }
@@ -43,7 +44,7 @@ const Packages = () => {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const res = await axios.get('http://localhost:8080/cars', {
+                    const res = await axios.get(`${API_BASE_URL}/cars`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     if (res.data?.status === 'success') {
@@ -112,7 +113,7 @@ const Packages = () => {
             }
         };
             
-            await axios.post('http://localhost:8080/order', payload, {
+            await axios.post(`${API_BASE_URL}/order`, payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             
@@ -179,7 +180,7 @@ const Packages = () => {
                                     price={washPackage.price}
                                     originalPrice={originalPrice}
                                     duration={`${washPackage.stock || '1 Month'} (4 Washes)`}
-                                    image={washPackage.images && washPackage.images.length > 0 ? `http://localhost:8080/${washPackage.images}` : null}
+                                    image={washPackage.images && washPackage.images.length > 0 ? `${API_BASE_URL}/${washPackage.images}` : null}
                                     features={features}
                                     isPopular={Number(washPackage.price) >= 500 && Number(washPackage.price) < 1000}
                                     isSelected={selectedPackageId === washPackage._id}

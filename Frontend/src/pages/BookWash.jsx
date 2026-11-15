@@ -8,6 +8,7 @@ import {
     CheckCircle2, ChevronRight, ChevronLeft, ShieldCheck, Waves, Sparkles, Droplets, Map
 } from 'lucide-react';
 import { notify } from '../utils/notify';
+import { API_BASE_URL } from '../config/api';
 import './BookWash.css';
 import { getBrandLogoUrl } from '../utils/logoHelper';
 import { ChipSvg, ContactlessSvg } from '../assets/cardIcons.jsx';
@@ -495,7 +496,7 @@ const BookWash = () => {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const res = await axios.get('http://localhost:8080/cars', {
+                    const res = await axios.get(`${API_BASE_URL}/cars`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     if (res.data?.status === 'success') {
@@ -516,7 +517,7 @@ const BookWash = () => {
                 return;
             }
             try {
-                const res = await axios.get(`http://localhost:8080/reservation/slots?date=${formData.date}`);
+                const res = await axios.get(`${API_BASE_URL}/reservation/slots?date=${formData.date}`);
                 if (res.data?.status === 'success') {
                     setBookedSlots(res.data.data);
                 }
@@ -601,7 +602,7 @@ const BookWash = () => {
         setIsSubmitting(true);
         try {
             // Note: Adjusted endpoint for realistic Maghsaltak structure
-            const response = await axios.post('http://localhost:8080/reservation', payload, {
+            const response = await axios.post(`${API_BASE_URL}/reservation`, payload, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

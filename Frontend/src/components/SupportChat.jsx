@@ -3,8 +3,9 @@ import axios from 'axios';
 import './SupportChat.css';
 import { useSocket } from '../hooks/useSocket';
 import supporter2Img from '../assets/supporter2.png';
+import { API_BASE_URL } from '../config/api';
 
-const API = 'http://localhost:8080';
+const API = API_BASE_URL;
 
 function getAuthHeader() {
   return { Authorization: `Bearer ${localStorage.getItem('token')}` };

@@ -15,12 +15,19 @@ const app = express();
 const httpServer = http.createServer(app);
 
 const PORT = process.env.PORT || 3000;
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const rawClientUrl = process.env.CLIENT_URL || "http://localhost:5173";
+const CLIENT_URL = rawClientUrl.replace(/\/+$/, "");
+const allowedOrigins = [
+  CLIENT_URL,
+  `${CLIENT_URL}/`,
+  "http://localhost:5173",
+  "http://localhost:5174",
+];
 
 // ── Socket.io Setup ──────────────────────────────────────────────────────────
 const io = new Server(httpServer, {
   cors: {
-    origin: [CLIENT_URL, "http://localhost:5173", "http://localhost:5174"],
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -153,7 +160,7 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
-    origin: [CLIENT_URL, "http://localhost:5173", "http://localhost:5174"],
+    origin: allowedOrigins,
     credentials: true,
   })
 );

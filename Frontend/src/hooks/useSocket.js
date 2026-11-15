@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
+import { API_BASE_URL } from '../config/api';
 
-const SOCKET_URL = 'http://localhost:8080';
+const SOCKET_URL = API_BASE_URL;
 
 // socket.io-client is loaded via CDN in index.html as window.io
 // This avoids any npm install issues while being functionally identical.

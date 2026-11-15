@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getBrandLogoUrl } from '../utils/logoHelper';
 import './Cart.css';
+import { API_BASE_URL } from '../config/api';
 
-const API = 'http://localhost:8080';
+const API = API_BASE_URL;
 
 const parseStoredUser = () => {
     try {
