@@ -155,8 +155,6 @@ const washImagesDir = path.join(__dirname, "uploads/wash-images");
 });
 
 // ── Middleware ───────────────────────────────────────────────────────────────
-app.use(express.json());
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
     origin: corsOriginHandler,
@@ -165,6 +163,34 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
+
+// Explicit preflight handler to guarantee 204 response with CORS headers on any route
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  } else {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  }
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Requested-With, Accept"
+  );
+
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+  next();
+});
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ── Health Check / Root ──────────────────────────────────────────────────────
 app.get("/", (req, res) => {

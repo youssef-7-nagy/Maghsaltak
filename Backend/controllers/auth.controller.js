@@ -261,7 +261,7 @@ async function updateMyGender(request, response) {
 
 async function googleLogin(request, response) {
   try {
-    const { credential, email: directEmail, name: directName } = request.body;
+    const { credential, email: directEmail, name: directName } = request.body || {};
     let email = directEmail;
     let name = directName;
 
