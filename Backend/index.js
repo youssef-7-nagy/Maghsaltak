@@ -167,10 +167,7 @@ app.use(
 
 // ── Health Check / Root ──────────────────────────────────────────────────────
 app.get("/", (req, res) => {
-  res.status(200).json({
-    status: "success",
-    message: "Maghsaltak Backend API is running successfully!",
-  });
+  res.status(200).send("Maghsaltak backend is running");
 });
 
 // ── Routes ───────────────────────────────────────────────────────────────────
@@ -322,4 +319,6 @@ httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Socket.io ready`);
 });
+
+module.exports = app;
 
