@@ -13,19 +13,32 @@ if (!process.env.VERCEL && process.platform === "win32") {
 
 dotenv.config();
 
-let isConnected = false;
+let cachedPromise = null;
 
 async function databaseConnection() {
-  if (isConnected || mongoose.connection.readyState === 1) {
-    return;
+  if (mongoose.connection.readyState === 1) {
+    return mongoose;
   }
-  try {
-    const db = await mongoose.connect(process.env.DB_URL);
-    isConnected = db.connections[0].readyState === 1;
-    console.log("MongoDB Connected!");
-  } catch (error) {
-    console.error("MongoDB connection error:", error.message);
+
+  if (mongoose.connection.readyState === 2 && cachedPromise) {
+    return cachedPromise;
   }
+
+  if (!cachedPromise) {
+    const opts = {
+      serverSelectionTimeoutMS: 5000,
+    };
+    cachedPromise = mongoose.connect(process.env.DB_URL, opts).then((m) => {
+      console.log("MongoDB Connected!");
+      return m;
+    }).catch((err) => {
+      cachedPromise = null;
+      console.error("MongoDB connection error:", err.message);
+      throw err;
+    });
+  }
+
+  return cachedPromise;
 }
 
 module.exports = {
