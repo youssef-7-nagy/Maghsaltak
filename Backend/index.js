@@ -197,6 +197,21 @@ app.get("/", (req, res) => {
   res.status(200).send("Maghsaltak backend is running");
 });
 
+app.get("/__diagnose", async (req, res) => {
+  try {
+    const mongoose = require("mongoose");
+    res.json({
+      dbReadyState: mongoose.connection.readyState,
+      hasDbUrl: !!process.env.DB_URL,
+      dbUrlPrefix: process.env.DB_URL ? process.env.DB_URL.slice(0, 15) : "MISSING",
+      hasJwtSecret: !!process.env.JWT_SECRET,
+      hasGoogleId: !!process.env.GOOGLE_CLIENT_ID
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message, stack: err.stack });
+  }
+});
+
 // ── Routes ───────────────────────────────────────────────────────────────────
 app.use("/auth", authRouter);
 
