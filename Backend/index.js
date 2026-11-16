@@ -212,6 +212,21 @@ app.get("/__diagnose", async (req, res) => {
   }
 });
 
+// ── Database Connection Middleware (Guarantees DB ready before ANY route) ────
+databaseConnection();
+app.use(async (req, res, next) => {
+  try {
+    await databaseConnection();
+    next();
+  } catch (err) {
+    console.error("[DB Middleware] Connection error:", err.message);
+    return res.status(503).json({
+      message: "Database connection failed",
+      error: err.message,
+    });
+  }
+});
+
 // ── Routes ───────────────────────────────────────────────────────────────────
 app.use("/auth", authRouter);
 
@@ -237,13 +252,6 @@ app.use("/support", supportRouter);
 
 const inventoryRouter = require("./routes/inventory.routes");
 app.use("/inventory", inventoryRouter);
-
-// ── Database Connection Middleware ──────────────────────────────────────────
-databaseConnection();
-app.use(async (req, res, next) => {
-  await databaseConnection();
-  next();
-});
 
 // ── Subscription Auto-Expiry (Only in persistent environments) ───────────────
 const { checkAndExpireSubscriptions } = require("./utils/subscriptionExpiry");

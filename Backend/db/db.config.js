@@ -25,6 +25,10 @@ async function databaseConnection() {
   }
 
   if (!cachedPromise) {
+    if (!process.env.DB_URL) {
+      console.error("DB_URL environment variable is not set!");
+      throw new Error("DB_URL environment variable is missing.");
+    }
     const opts = {
       serverSelectionTimeoutMS: 5000,
     };

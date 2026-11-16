@@ -13,6 +13,14 @@ import {
 
 const EMAIL_USED_MESSAGE = "This email is already used. Please sign in instead.";
 
+const getPostLoginRoute = (user) => {
+    if (!user) return "/";
+    if (user.role === "admin") return "/admin";
+    if (user.role === "serviceProvider") return "/service-provider";
+    const hasGender = user.gender && ["male", "female"].includes(String(user.gender).toLowerCase());
+    return hasGender ? "/profile" : "/select-gender";
+};
+
 const Login = () => {
     const [isActive, setIsActive] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -170,13 +178,7 @@ const Login = () => {
             emitAuthChanged();
             notify.success("Success - Login successful!");
             setTimeout(() => {
-                if (user && user.role === 'admin') {
-                    navigate("/admin");
-                } else if (user && user.role === 'serviceProvider') {
-                    navigate("/service-provider");
-                } else {
-                    navigate("/");
-                }
+                navigate(getPostLoginRoute(user));
             }, 100);
         } catch (err) {
             console.error("Login Error:", err);
@@ -216,13 +218,7 @@ const Login = () => {
 
                 notify.success("Success - Google sign in successful!");
                 setTimeout(() => {
-                    if (user && user.role === 'admin') {
-                        navigate("/admin");
-                    } else if (user && user.role === 'serviceProvider') {
-                        navigate("/service-provider");
-                    } else {
-                        navigate("/");
-                    }
+                    navigate(getPostLoginRoute(user));
                 }, 100);
             } catch (err) {
                 console.error("Google Auth Error:", err);
@@ -260,13 +256,7 @@ const Login = () => {
 
                 notify.success("Success - Google sign up successful!");
                 setTimeout(() => {
-                    if (user && user.role === 'admin') {
-                        navigate("/admin");
-                    } else if (user && user.role === 'serviceProvider') {
-                        navigate("/service-provider");
-                    } else {
-                        navigate("/select-gender");
-                    }
+                    navigate(getPostLoginRoute(user));
                 }, 100);
             } catch (err) {
                 console.error("Google Auth Error:", err);
