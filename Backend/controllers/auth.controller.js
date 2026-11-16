@@ -293,6 +293,8 @@ async function googleLogin(request, response) {
       return response.status(400).json({ message: "Email is required for Google login" });
     }
     
+    email = email.trim().toLowerCase();
+    
     let user = await User.findOne({ email });
 
     if (!user) {
@@ -313,8 +315,8 @@ async function googleLogin(request, response) {
       },
     });
   } catch (error) {
-    console.log(error);
-    return response.status(500).json({ message: "internal server error.." });
+    console.error("Google login error:", error);
+    return response.status(500).json({ message: error.message || "internal server error.." });
   }
 }
 

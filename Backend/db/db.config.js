@@ -2,11 +2,13 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const dns = require("dns");
 
-// Ensure MongoDB Atlas SRV records resolve reliably across all ISPs/networks
-try {
-  dns.setServers(["8.8.8.8", "1.1.1.1"]);
-} catch (e) {
-  // Ignore if custom DNS fails to apply
+// Ensure MongoDB Atlas SRV records resolve reliably on local machines
+if (!process.env.VERCEL && process.platform === "win32") {
+  try {
+    dns.setServers(["8.8.8.8", "1.1.1.1"]);
+  } catch (e) {
+    // Ignore if custom DNS fails to apply
+  }
 }
 
 dotenv.config();
