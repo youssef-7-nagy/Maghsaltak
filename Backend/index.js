@@ -30,6 +30,10 @@ const io = new Server(httpServer, {
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
   },
+  transports: ["polling", "websocket"],
+  allowEIO3: true,
+  pingTimeout: 60000,
+  pingInterval: 25000,
 });
 
 // Make io accessible in route handlers via req.app.get("io")
@@ -377,5 +381,7 @@ if (!process.env.VERCEL) {
   });
 }
 
-module.exports = app;
+module.exports = httpServer;
+module.exports.app = app;
+module.exports.httpServer = httpServer;
 

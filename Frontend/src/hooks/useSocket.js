@@ -9,19 +9,30 @@ const SOCKET_URL = API_BASE_URL;
 let socketInstance = null;
 
 function getSocket() {
-  if (!window.io) {
-    console.warn('[Socket] window.io not available yet — CDN script may still be loading');
+  if (typeof window === 'undefined' || !window.io) {
     return null;
   }
 
-  if (!socketInstance || socketInstance.disconnected) {
-    socketInstance = window.io(SOCKET_URL, {
-      transports: ['websocket', 'polling'],
-      autoConnect: true,
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-    });
+  // Strict singleton — do not re-create if disconnected, Socket.IO handles reconnection automatically
+  if (!socketInstance) {
+    try {
+      socketInstance = window.io(SOCKET_URL, {
+        transports: ['polling', 'websocket'],
+        autoConnect: true,
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 3000,
+        reconnectionDelayMax: 10000,
+        timeout: 10000,
+      });
+
+      socketInstance.on('connect_error', (err) => {
+        // Log softly so it doesn't flood console with fatal red errors
+        console.warn('[Socket.io] Realtime connection fallback:', err.message);
+      });
+    } catch (e) {
+      console.warn('[Socket.io] Initialization error:', e.message);
+    }
   }
 
   return socketInstance;
@@ -38,10 +49,6 @@ export function useSocket() {
     const socket = getSocket();
     if (!socket) return;
     socketRef.current = socket;
-
-    if (!socket.connected) {
-      socket.connect();
-    }
 
     return () => {
       // Do NOT disconnect — socket is shared across components
