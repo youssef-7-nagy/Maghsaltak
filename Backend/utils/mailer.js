@@ -6,9 +6,9 @@ dotenv.config();
 // Gmail SMTP transporter — uses SMTP_USER (Gmail address) + SMTP_PASS (App Password)
 // Explicitly using port 587 (TLS) because port 465 is often blocked by ISPs resulting in ETIMEDOUT
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // true for 465, false for other ports
+  host: process.env.SMTP_HOST || "smtp.gmail.com",
+  port: Number(process.env.SMTP_PORT) || 587,
+  secure: Number(process.env.SMTP_PORT) === 465, // true for 465, false for other ports
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -22,7 +22,7 @@ const transporter = nodemailer.createTransport({
  */
 const sendPasswordResetEmail = async (toEmail, resetUrl) => {
   const mailOptions = {
-    from: `"Maghsaltak 🚗" <${process.env.SMTP_USER}>`,
+    from: process.env.EMAIL_FROM || `"Maghsaltak 🚗" <${process.env.SMTP_USER}>`,
     to: toEmail,
     subject: "Reset Your Password — Maghsaltak",
     html: `
