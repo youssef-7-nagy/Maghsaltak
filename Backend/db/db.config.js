@@ -13,36 +13,55 @@ if (!process.env.VERCEL && process.platform === "win32") {
 
 dotenv.config();
 
-let cachedPromise = null;
+let cached = global.mongoose;
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
 async function databaseConnection() {
+  if (cached.conn && mongoose.connection.readyState === 1) {
+    return cached.conn;
+  }
+
   if (mongoose.connection.readyState === 1) {
-    return mongoose;
+    cached.conn = mongoose;
+    return cached.conn;
   }
 
-  if (mongoose.connection.readyState === 2 && cachedPromise) {
-    return cachedPromise;
+  if (mongoose.connection.readyState === 2 && cached.promise) {
+    return cached.promise;
   }
 
-  if (!cachedPromise) {
+  if (!cached.promise) {
     if (!process.env.DB_URL) {
       console.error("DB_URL environment variable is not set!");
       throw new Error("DB_URL environment variable is missing.");
     }
     const opts = {
       serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 5000,
+      maxPoolSize: 10,
     };
-    cachedPromise = mongoose.connect(process.env.DB_URL, opts).then((m) => {
+    cached.promise = mongoose.connect(process.env.DB_URL, opts).then((m) => {
       console.log("MongoDB Connected!");
+      cached.conn = m;
       return m;
     }).catch((err) => {
-      cachedPromise = null;
+      cached.promise = null;
+      cached.conn = null;
       console.error("MongoDB connection error:", err.message);
       throw err;
     });
   }
 
-  return cachedPromise;
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+
+  return cached.conn;
 }
 
 module.exports = {

@@ -56,17 +56,24 @@ const AddCarModal = ({ isOpen, onClose, onAddCar }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        await onAddCar({
-            type: carData.type,
-            brand: carData.brand,
-            model: carData.model,
-            year: carData.year,
-            color: carData.color,
-            plateNumber: carData.licensePlate
-        });
-        setIsSubmitting(false);
-        handleReset();
-        onClose();
+        try {
+            const success = await onAddCar({
+                type: carData.type,
+                brand: carData.brand,
+                model: carData.model,
+                year: carData.year,
+                color: carData.color,
+                plateNumber: carData.licensePlate
+            });
+            if (success !== false) {
+                handleReset();
+                onClose();
+            }
+        } catch (err) {
+            console.error("Add car error in modal:", err);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const currentYear = new Date().getFullYear();

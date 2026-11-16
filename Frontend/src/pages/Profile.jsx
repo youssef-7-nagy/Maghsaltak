@@ -490,12 +490,19 @@ const Profile = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.status === 'success') {
-                setMyCars(prev => [...prev, res.data.data]);
-                notify('Vehicle added successfully to your garage', 'success');
+                if (res.data.data?.cars) {
+                    setMyCars(res.data.data.cars);
+                } else if (res.data.data) {
+                    setMyCars(prev => [...prev, res.data.data]);
+                }
+                notify.success('Vehicle added successfully to your garage');
+                return true;
             }
+            return false;
         } catch (error) {
             console.error('Add car error:', error);
-            notify(error.response?.data?.message || 'Failed to add vehicle', 'error');
+            notify.error(error.response?.data?.message || 'Failed to add vehicle');
+            return false;
         }
     };
 

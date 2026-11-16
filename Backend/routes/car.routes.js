@@ -6,6 +6,7 @@ const { authMiddleWare } = require("../middlewares/auth.middleware.js");
 
 router.use(authMiddleWare);
 
+router.post("/", carController.addCar);
 router.post("/add", carController.addCar);
 router.get("/admin/all", carController.getAllCarsAdmin);
 router.get("/", carController.getUserCars);

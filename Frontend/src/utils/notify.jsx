@@ -85,12 +85,19 @@ const createToast = (message, variant = "info", duration = 3500, customTitle) =>
     );
 };
 
-export const notify = {
-    success: (message, options = {}) => createToast(message, "success", options.duration, options.title),
-    info: (message, options = {}) => createToast(message, "info", options.duration, options.title),
-    warning: (message, options = {}) => createToast(message, "warning", options.duration, options.title),
-    error: (message, options = {}) => createToast(message, "error", options.duration, options.title),
-    dismiss: (id) => toast.dismiss(id),
+const notifyFn = (message, variant = "info", options = {}) => {
+    const v = String(variant).toLowerCase();
+    if (v === "success") return createToast(message, "success", options.duration, options.title);
+    if (v === "error") return createToast(message, "error", options.duration, options.title);
+    if (v === "warning") return createToast(message, "warning", options.duration, options.title);
+    return createToast(message, "info", options.duration, options.title);
 };
 
+notifyFn.success = (message, options = {}) => createToast(message, "success", options.duration, options.title);
+notifyFn.info = (message, options = {}) => createToast(message, "info", options.duration, options.title);
+notifyFn.warning = (message, options = {}) => createToast(message, "warning", options.duration, options.title);
+notifyFn.error = (message, options = {}) => createToast(message, "error", options.duration, options.title);
+notifyFn.dismiss = (id) => toast.dismiss(id);
+
+export const notify = notifyFn;
 export default notify;
