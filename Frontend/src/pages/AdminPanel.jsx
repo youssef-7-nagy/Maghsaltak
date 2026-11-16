@@ -479,8 +479,9 @@ const AdminPanel = () => {
       setEditingId(null);
       clearMenuUploadFiles();
       fetchData("packages");
-    } catch {
-      notify.error("Error - Failed to save package.");
+    } catch (err) {
+      const msg = err.response?.data?.message || "Failed to save package.";
+      notify.error(`Error - ${msg}`);
     }
   };
 

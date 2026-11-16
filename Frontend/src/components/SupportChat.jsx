@@ -21,8 +21,8 @@ function getStoredUser() {
  * Admins handle replies via the Admin Panel → Support tab.
  */
 export default function SupportChat() {
-  const { socket } = useSocket();
   const [isOpen,       setIsOpen]       = useState(false);
+  const { socket } = useSocket({ autoConnect: isOpen });
   const [conversation, setConversation] = useState(null);  // { _id, messages[] }
   const [messages,     setMessages]     = useState([]);
   const [inputText,    setInputText]    = useState('');
@@ -125,7 +125,7 @@ export default function SupportChat() {
   };
 
   // ── Send message ──────────────────────────────────────────────────────────
-  const handleSend = useCallback(() => {
+  const handleSend = useCallback(async () => {
     const text = inputText.trim();
     const conv = conversationRef.current;
     if (!text || !senderId || !conv?._id || sending) return;
@@ -141,7 +141,18 @@ export default function SupportChat() {
         text,
       });
     } else {
-      console.warn('SupportChat: socket not connected, message not sent');
+      // Fallback via reliable HTTP REST API
+      try {
+        const res = await axios.post(`${API}/support/message`, {
+          conversationId: conv._id,
+          text,
+        }, { headers: getAuthHeader() });
+        if (res.data?.data) {
+          setMessages((prev) => [...prev, res.data.data]);
+        }
+      } catch (err) {
+        console.error('SupportChat: HTTP send error', err);
+      }
     }
     setInputText('');
     

@@ -7,6 +7,7 @@ const router = express.Router();
 
 // Client: get or create their support conversation
 router.get("/my", authenticate, supportController.getMyConversation);
+router.post("/message", authenticate, supportController.sendMessageHttp);
 
 // Admin: list all conversations (includes unreadByAdmin per conversation)
 router.get("/admin/all", authenticate, adminOnly, supportController.getAllConversations);

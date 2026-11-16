@@ -1,11 +1,29 @@
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
+
+const baseUploadDir = process.env.VERCEL
+  ? path.join(os.tmpdir(), "uploads")
+  : path.join(__dirname, "../uploads");
+
+const washImagesDir = path.join(baseUploadDir, "wash-images");
+
+[baseUploadDir, washImagesDir].forEach((dir) => {
+  if (!fs.existsSync(dir)) {
+    try {
+      fs.mkdirSync(dir, { recursive: true });
+    } catch (e) {}
+  }
+});
 
 // ── Profile Photo Upload ─────────────────────────────────────────────────────
 const profileStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/");
+    if (!fs.existsSync(baseUploadDir)) {
+      try { fs.mkdirSync(baseUploadDir, { recursive: true }); } catch (e) {}
+    }
+    cb(null, baseUploadDir);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -26,13 +44,11 @@ const upload = multer({
 });
 
 // ── Wash Images Upload (before/after) ───────────────────────────────────────
-const washImagesDir = path.join(__dirname, "../uploads/wash-images");
-if (!fs.existsSync(washImagesDir)) {
-  fs.mkdirSync(washImagesDir, { recursive: true });
-}
-
 const washImageStorage = multer.diskStorage({
   destination: function (req, file, cb) {
+    if (!fs.existsSync(washImagesDir)) {
+      try { fs.mkdirSync(washImagesDir, { recursive: true }); } catch (e) {}
+    }
     cb(null, washImagesDir);
   },
   filename: function (req, file, cb) {

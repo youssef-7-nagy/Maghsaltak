@@ -18,15 +18,20 @@ exports.createPackage = async (req, res) => {
   try {
     const { title, description, price, stock, category } = req.body;
     
-    
-    const images = req.files ? req.files.map(file => `uploads/${file.filename}`) : [];
+    if (!title || !description || price === undefined) {
+      return res.status(400).json({ status: "fail", message: "Title, description and price are required" });
+    }
+
+    const images = req.files && req.files.length > 0
+      ? req.files.map(file => `uploads/${file.filename}`) 
+      : [];
 
     const newPackage = await Package.create({
-      title,
-      description,
+      title: String(title).trim(),
+      description: String(description).trim(),
       price: Number(price),
       stock: stock || "Unlimited",
-      category,
+      category: category || "wash",
       images,
     });
 
@@ -36,7 +41,7 @@ exports.createPackage = async (req, res) => {
     });
   } catch (error) {
     console.error("Create Package Error:", error.message);
-    res.status(500).json({ status: "fail", message: "Failed to create package" });
+    res.status(500).json({ status: "fail", message: error.message || "Failed to create package" });
   }
 };
 

@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const SupportConversation = require("../models/SupportConversation");
 const { User } = require("../models/User");
 
@@ -89,5 +90,58 @@ exports.closeConversation = async (req, res) => {
   } catch (err) {
     console.error("closeConversation error:", err);
     return res.status(500).json({ status: "fail", message: "Server error" });
+  }
+};
+
+// ── Send a message via HTTP (Reliable fallback when WebSockets drop) ─────────
+exports.sendMessageHttp = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const { conversationId, text } = req.body;
+    if (!conversationId || !text?.trim()) {
+      return res.status(400).json({ status: "fail", message: "Conversation ID and message text are required" });
+    }
+
+    const user = await User.findById(userId).select("name role");
+    if (!user) return res.status(404).json({ status: "fail", message: "User not found" });
+
+    const message = {
+      _id: new mongoose.Types.ObjectId(),
+      senderId: user._id,
+      senderName: user.name || (user.role === "admin" ? "Admin" : "Customer"),
+      senderRole: user.role === "admin" ? "admin" : "user",
+      text: text.trim(),
+      sentAt: new Date(),
+    };
+
+    const updateFields = { $push: { messages: message } };
+    if (user.role === "admin") {
+      updateFields.$set = { lastAdminReplyAt: new Date(), unreadByAdmin: 0 };
+    } else {
+      updateFields.$set = { lastUserMessageAt: new Date() };
+      updateFields.$inc = { unreadByAdmin: 1 };
+    }
+
+    const conv = await SupportConversation.findByIdAndUpdate(conversationId, updateFields, { new: true });
+    if (!conv) return res.status(404).json({ status: "fail", message: "Conversation not found" });
+
+    try {
+      const io = req.app.get("io");
+      if (io) {
+        const outgoing = { ...message, conversationId };
+        io.to(`support_${conversationId}`).emit("support_message", outgoing);
+        if (user.role !== "admin") {
+          io.to("support_admin").emit("support_new_user_message", outgoing);
+        }
+        io.to("support_admin").emit("support_message", outgoing);
+      }
+    } catch (e) {
+      // socket broadcast error ignored
+    }
+
+    return res.status(200).json({ status: "success", data: message });
+  } catch (err) {
+    console.error("sendMessageHttp error:", err);
+    return res.status(500).json({ status: "fail", message: err.message || "Server error" });
   }
 };

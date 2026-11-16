@@ -195,6 +195,9 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+if (process.env.VERCEL) {
+  app.use("/uploads", express.static(path.join(require("os").tmpdir(), "uploads")));
+}
 
 // ── Health Check / Root ──────────────────────────────────────────────────────
 app.get("/", (req, res) => {

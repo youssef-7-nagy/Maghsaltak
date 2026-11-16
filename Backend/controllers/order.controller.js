@@ -83,10 +83,7 @@ exports.createOrder = async (req, res) => {
       return res.status(404).json({ status: "fail", message: "User not found" });
     }
 
-    const resolvedPhone = String(userPhone || dbUser.phone || "").trim();
-    if (!resolvedPhone) {
-      return res.status(400).json({ status: "fail", message: "Phone number is required" });
-    }
+    const resolvedPhone = String(userPhone || dbUser.phone || "0000000000").trim() || "0000000000";
 
     const packageIdCandidate = subscriptionDetails.packageId || normalizedItems[0]?.packageId;
     const validPackageId = mongoose.Types.ObjectId.isValid(packageIdCandidate)
@@ -153,7 +150,7 @@ exports.createOrder = async (req, res) => {
     return res.status(201).json({ status: "success", data: newOrder });
   } catch (error) {
     console.error("Failed to create order:", error);
-    return res.status(500).json({ status: "fail", message: "Failed to create order" });
+    return res.status(500).json({ status: "fail", message: error.message || "Failed to create order" });
   }
 };
 

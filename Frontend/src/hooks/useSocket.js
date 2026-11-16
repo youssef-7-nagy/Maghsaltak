@@ -3,9 +3,6 @@ import { API_BASE_URL } from '../config/api';
 
 const SOCKET_URL = API_BASE_URL;
 
-// socket.io-client is loaded via CDN in index.html as window.io
-// This avoids any npm install issues while being functionally identical.
-
 let socketInstance = null;
 
 function getSocket() {
@@ -13,25 +10,27 @@ function getSocket() {
     return null;
   }
 
-  // Strict singleton — do not re-create if disconnected, Socket.IO handles reconnection automatically
+  // Strict singleton — configure for serverless WebSocket transport
   if (!socketInstance) {
     try {
       socketInstance = window.io(SOCKET_URL, {
-        transports: ['polling', 'websocket'],
-        autoConnect: true,
+        // Vercel Serverless requires pure websocket transport.
+        // Polling causes 400 Bad Request because serverless instances do not share session IDs.
+        transports: ['websocket'],
+        upgrade: false,
+        autoConnect: false,
         reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 3000,
-        reconnectionDelayMax: 10000,
+        reconnectionAttempts: 3,
+        reconnectionDelay: 5000,
+        reconnectionDelayMax: 15000,
         timeout: 10000,
       });
 
-      socketInstance.on('connect_error', (err) => {
-        // Log softly so it doesn't flood console with fatal red errors
-        console.warn('[Socket.io] Realtime connection fallback:', err.message);
+      socketInstance.on('connect_error', () => {
+        // Quietly absorb connection errors without crashing or flooding console
       });
     } catch (e) {
-      console.warn('[Socket.io] Initialization error:', e.message);
+      // Quietly absorb initialization errors
     }
   }
 
@@ -39,10 +38,10 @@ function getSocket() {
 }
 
 /**
- * useSocket — shared socket hook using CDN window.io.
- * Returns emit and on helpers backed by the singleton socket.
+ * useSocket — shared socket hook with lazy on-demand connection.
+ * @param {boolean} options.autoConnect - only establish connection when component needs it (e.g., chat is open).
  */
-export function useSocket() {
+export function useSocket({ autoConnect = false } = {}) {
   const socketRef = useRef(null);
 
   useEffect(() => {
@@ -50,13 +49,25 @@ export function useSocket() {
     if (!socket) return;
     socketRef.current = socket;
 
+    if (autoConnect && !socket.connected) {
+      try {
+        socket.connect();
+      } catch (e) {
+        // absorb
+      }
+    }
+
     return () => {
       // Do NOT disconnect — socket is shared across components
     };
-  }, []);
+  }, [autoConnect]);
 
   const emit = useCallback((event, data) => {
-    socketRef.current?.emit(event, data);
+    if (socketRef.current?.connected) {
+      try {
+        socketRef.current.emit(event, data);
+      } catch (e) {}
+    }
   }, []);
 
   const on = useCallback((event, handler) => {

@@ -15,7 +15,8 @@ function getStoredUser() {
 }
 
 export default function AdminSupportChat() {
-  const { socket } = useSocket();
+  const [isOpen, setIsOpen] = useState(false);
+  const { socket } = useSocket({ autoConnect: isOpen });
 
   const [conversations,  setConversations]  = useState([]);
   const [selected,       setSelected]       = useState(null); 
@@ -193,7 +194,7 @@ export default function AdminSupportChat() {
   }, [socket, scrollToBottom]);
 
   // ── Send a reply ───────────────────────────────────────────────────────────
-  const handleSend = useCallback(() => {
+  const handleSend = useCallback(async () => {
     const text = inputText.trim();
     if (!text || !selected || sending) return;
     setSending(true);
@@ -208,6 +209,19 @@ export default function AdminSupportChat() {
       });
       // Clear typing indicator instantly
       sock.emit('support_typing', { conversationId: selected._id, isTyping: false });
+    } else {
+      // Fallback via reliable HTTP REST API
+      try {
+        const res = await axios.post(`${API}/support/message`, {
+          conversationId: selected._id,
+          text,
+        }, { headers: getAuthHeader() });
+        if (res.data?.data) {
+          setMessages((prev) => [...prev, res.data.data]);
+        }
+      } catch (err) {
+        console.error('AdminSupportChat: HTTP send error', err);
+      }
     }
     setInputText('');
     setTimeout(() => setSending(false), 400);
@@ -235,8 +249,6 @@ export default function AdminSupportChat() {
       }, 2000);
     }
   };
-
-  const [isOpen, setIsOpen] = useState(false);
 
   // ── Filtered conversations ──────────────────────────────────────────────────
   const filteredConversations = useMemo(() => {
